@@ -15,6 +15,7 @@ import (
 
 var appID string
 var appCertificate string
+var appPass string
 
 func init() {
 	// loads values from .env into the system
@@ -28,11 +29,14 @@ func main() {
 	appIDEnv, appIDExists := os.LookupEnv("APP_ID")
 	appCertEnv, appCertExists := os.LookupEnv("APP_CERTIFICATE")
 
-	if !appIDExists || !appCertExists {
-		log.Fatal("FATAL ERROR: ENV not properly configured, check appID and appCertificate")
+	appPassEnv, appPassExists := os.LookupEnv("APP_PASS")
+	
+	if !appIDExists || !appCertExists || !appPassExists {
+		log.Fatal("FATAL ERROR: ENV not properly configured, check appID, appCertificate & appPass")
 	} else {
 		appID = appIDEnv
 		appCertificate = appCertEnv
+		appPass = appPassEnv
 	}
 
 	api := gin.Default()
@@ -179,8 +183,16 @@ func parseRtcParams(c *gin.Context) (channelName, tokentype, uidStr string, role
 	roleStr := c.Param("role")
 	tokentype = c.Param("tokentype")
 	uidStr = c.Param("uid")
+	
 	expireTime := c.DefaultQuery("expiry", "3600")
-
+	
+	passwordFromUrlValue := c.DefaultQuery("password", "")
+	
+	if passwordFromUrlValue != appPass {
+	      // if wrong password
+		err = fmt.Errorf("wrong password! %s", passwordFromUrlValue)
+	}
+	
 	if roleStr == "publisher" {
 		role = rtctokenbuilder.RolePublisher
 	} else {
@@ -205,6 +217,13 @@ func parseRtmParams(c *gin.Context) (uidStr string, expireTimestamp uint32, err 
 	// get param values
 	uidStr = c.Param("uid")
 	expireTime := c.DefaultQuery("expiry", "3600")
+	
+	passwordFromUrlValue := c.DefaultQuery("password", "")
+	
+	if passwordFromUrlValue != appPass {
+	      // if wrong password
+		err = fmt.Errorf("wrong password! %s", passwordFromUrlValue)
+	}
 
 	expireTime64, parseErr := strconv.ParseUint(expireTime, 10, 64)
 	if parseErr != nil {
