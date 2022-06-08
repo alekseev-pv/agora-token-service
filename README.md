@@ -9,7 +9,7 @@ Agora.io Advanced Guide: [Token Management](https://docs.agora.io/en/Video/token
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy/?template=https://github.com/alekseev-pv/agora-token-service)
 
 ## How to Run ##
-Set the APP_ID and APP_CERTIFICATE env variables.
+Set the APP_ID, APP_CERTIFICATE & APP_PASS env variables.
 ```bash
 cp .env.example .env
 ```
@@ -24,11 +24,12 @@ The pre-compiled binaries are also available in [releases](https://github.com/ma
 
 ## Docker ##
 
-#1. Open the `Dokerfile` and update the values for `APP_ID` and `APP_CERT`
+#1. Open the `Dokerfile` and update the values for `APP_ID`, `APP_CERT` and `APP_PASS`
 
 ```bash
 ENV APP_ID=""
 ENV APP_CERTIFICATE=""
+ENV APP_PASS=""
 ```
 #2. To build the container: 
 
@@ -63,7 +64,7 @@ The `rtc` token endpoint requires a `tokentype` (uid || userAccount), `channelNa
 
 **endpoint structure** 
 ```
-/rtc/:channelName/:role/:tokentype/:uid/?expire=
+/rtc/:channelName/:role/:tokentype/:uid/?expire=9999&password=password
 ```
 
 response:
@@ -76,7 +77,7 @@ The `rtm` token endpoint requires the user's `uid`.
 `(optional)` Pass an integer to represent the privelege lifetime in seconds.
 **endpoint structure** 
 ```
-/rtm/:uid/?expire=
+/rtm/:uid/?expire=9999&password=password
 ```
 
 response:
@@ -90,7 +91,7 @@ The `rte` token endpoint generates both the `rtc` and `rtm` tokens with a single
 
 **endpoint structure** 
 ```
-/rte/:channelName/:role/:tokentype/:uid/?expireTime
+/rte/:channelName/:role/:tokentype/:uid/?expire=9999&password=password
 ```
 
 response:
