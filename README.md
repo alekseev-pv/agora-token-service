@@ -63,7 +63,7 @@ The `rtc` token endpoint requires a `tokentype` (uid || userAccount), `channelNa
 
 **endpoint structure** 
 ```
-/rtc/:channelName/:role/:tokentype/:uid/?expireTime
+/rtc/:channelName/:role/:tokentype/:uid/?expire=
 ```
 
 response:
@@ -76,7 +76,7 @@ The `rtm` token endpoint requires the user's `uid`.
 `(optional)` Pass an integer to represent the privelege lifetime in seconds.
 **endpoint structure** 
 ```
-/rtm/:uid/?expireTime
+/rtm/:uid/?expire=
 ```
 
 response:
